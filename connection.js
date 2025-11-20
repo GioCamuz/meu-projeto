@@ -22,6 +22,7 @@ async function getPool() {
     return pool
   } catch (error) {
     console.log('Erro conexão DB:', error)
+    return null;
   }
   
 }
