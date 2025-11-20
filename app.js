@@ -20,17 +20,9 @@ async function execSQLQuery(sqlQry) {
     return recordset;
 }
 
-app.get('/test', (req, res) => {
-  res.json({ message: 'Teste funcionando!' });
-});
-
-app.post('/test-post', (req, res) => {
-  res.json({ message: 'POST funcionando!', body: req.body });
-});
-
 //Consultar todos os logins
 
-app.get('/login', async (req, res) => {
+app.get('/users', async (req, res) => {
     const aUsers = await execSQLQuery('SELECT * FROM users');
 
     if (!aUsers.length) {
