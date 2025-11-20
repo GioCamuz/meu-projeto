@@ -1,7 +1,7 @@
 const http = require("http");
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT ||3000;
 const bcrypt = require("bcrypt");
 const { getPool } = require('./connection');
 
@@ -19,6 +19,14 @@ async function execSQLQuery(sqlQry) {
     const { recordset } = await pool.request().query(sqlQry);
     return recordset;
 }
+
+app.get('/test', (req, res) => {
+  res.json({ message: 'Teste funcionando!' });
+});
+
+app.post('/test-post', (req, res) => {
+  res.json({ message: 'POST funcionando!', body: req.body });
+});
 
 //Consultar todos os logins
 
@@ -175,4 +183,4 @@ app.delete('/tasks/:id', async (req, res) => {
 
 
 
-http.createServer(app).listen(port, () => console.log("Servidor rodando local na porta 3000"));
+http.createServer(app).listen(port, () => console.log(`Servidor rodando local na porta ${port}`));
