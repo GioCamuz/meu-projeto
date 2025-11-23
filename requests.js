@@ -2,7 +2,7 @@ const {getPool} = require('./connection')
 
 async function listarTarefas() {
     const pool = await getPool();
-    const result = await pool.request().query('SELECT * FROM TASKS' );
+    const result = await pool.request().query('SELECT * FROM tasks' );
     console.log(result.recordset);
 
 }
