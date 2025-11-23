@@ -37,7 +37,7 @@ app.get('/users', async (req, res) => {
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
-    if (!email && !password) {
+    if (!email || !password) {
         return res.status(400).json({ error: 'É necessário preencher todos os campos!' });
     }
     console.log(email);
@@ -175,4 +175,4 @@ app.delete('/tasks/:id', async (req, res) => {
 
 
 
-http.createServer(app).listen(port, () => console.log(`Servidor rodando local na porta ${port}`));
+app.listen(port, () => console.log(`Servidor rodando local na porta ${port}`));
