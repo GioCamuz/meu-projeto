@@ -20,6 +20,12 @@ async function execSQLQuery(sqlQry) {
     return recordset;
 }
 
+//Teste
+app.all('/debug', (req, res) => {
+    res.json({ method: req.method });
+});
+
+
 //Consultar todos os logins
 
 app.get('/users', async (req, res) => {
