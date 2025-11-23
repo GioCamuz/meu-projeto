@@ -61,7 +61,7 @@ app.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const userExist = await execSQLQuery(`SELECT * FROM user WHERE id=${id} AND email=${email} AND password=${password}`);
+    const userExist = await execSQLQuery(`SELECT * FROM users WHERE id=${id} AND email=${email} AND password=${password}`);
 
     if (!userExist.length) {
 
