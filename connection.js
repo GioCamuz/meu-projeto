@@ -12,7 +12,8 @@ const config = {
   options: {
     encrypt: true,
     trustServerCertificate: false
-  }
+  },
+  connectionTimeout: 30000
 };
 
 async function getPool() {
