@@ -37,7 +37,7 @@ app.get('/users', async (req, res) => {
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
 
-    if (!email && !password) {
+    if (!email || !password) {
         return res.status(400).json({ error: 'É necessário preencher todos os campos!' });
     }
     console.log(email);
