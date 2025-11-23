@@ -175,4 +175,4 @@ app.delete('/tasks/:id', async (req, res) => {
 
 
 
-http.createServer(app).listen(port, () => console.log(`Servidor rodando local na porta ${port}`));
+app.listen(port, () => console.log(`Servidor rodando local na porta ${port}`));
