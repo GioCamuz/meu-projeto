@@ -5,6 +5,13 @@ const port = process.env.PORT ||3000;
 const bcrypt = require("bcrypt");
 const { getPool } = require('./connection');
 
+const cors = require("cors");
+
+app.use(cors({
+  origin: "*",
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type, Authorization"
+}));
 
 
 //Middleware para ler JSON no corpo da requisição
@@ -58,11 +65,11 @@ app.post('/register', async (req, res) => {
 
 //Consultar login para acesso
 
-app.post('/login', async (req, res) => {
+app.get('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const userExist = await execSQLQuery(`SELECT * FROM users WHERE id=${id} AND email='${email}' AND password='${password}'`);
+    const userExist = await execSQLQuery(`SELECT * FROM users WHERE email='${email}' AND password='${password}'`);
 
     if (!userExist.length) {
 
