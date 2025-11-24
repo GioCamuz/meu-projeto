@@ -139,7 +139,7 @@ app.post('/tasks', async (req, res) => {
     
     await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, created_at, completed_at) 
-        VALUES (${user_id},'${name}','${priority}', '${status}', '${created_at}', '${completed_at}')`);
+        VALUES (${user_id},'${name}','${priority}', '${status}', ${created_at}, ${completed_at})`);
         
     res.status(200).json({ message: 'Task incluida com sucesso' });
 });
