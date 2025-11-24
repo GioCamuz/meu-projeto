@@ -138,7 +138,7 @@ app.post('/tasks', async (req, res) => {
 
     await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at) 
-        VALUES (${user_id},'${name}','${priority}', '${status}', ${completed_at})`);
+        VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')`);
         
     res.status(201).json({ message: 'Task incluida com sucesso'});
 });
@@ -159,7 +159,7 @@ app.put('/tasks/:id', async (req, res) => {
     }
     await execSQLQuery(`
         UPDATE tasks
-        SET name='${name}', priority='${priority}', status='${status}', completed_at=${completed_at} 
+        SET name='${name}', priority='${priority}', status='${status}', completed_at='${completed_at}' 
         WHERE id=${taskId}`);
 
     return res.status(200).json({ message: 'Dados atualizados!' });
