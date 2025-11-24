@@ -178,7 +178,7 @@ app.delete('/tasks/:id', async (req, res) => {
 
     await execSQLQuery(`DELETE tasks WHERE id=${taskId}`);
 
-    return res.status(200).json({ response: 'Task deletada!' });    
+    return res.status(204).json({ response: 'Task deletada!' });    
 })
 
 
