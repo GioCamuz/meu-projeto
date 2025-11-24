@@ -77,7 +77,7 @@ app.get('/login', async (req, res) => {
 
     }
 
-    return res.status(200).json({ message: 'Login realizado!' });
+    return res.status(200).json({ message: 'Login realizado!',user_id: usersExist.id });
 });
 
 //Trocar de senha de login
