@@ -160,7 +160,7 @@ app.put('/tasks/:id', async (req, res) => {
     }
     await execSQLQuery(`
         UPDATE tasks
-        SET name='${name}', priority='${priority}', status='${status}', created_at='${created_at}', completed_at='${completed_at}' 
+        SET name='${name}', priority='${priority}', status='${status}', created_at=${created_at}, completed_at=${completed_at} 
         WHERE id=${taskId}`);
 
     return res.status(200).json({ message: 'Dados atualizados!' });
