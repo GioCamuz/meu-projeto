@@ -59,7 +59,7 @@ app.post('/register', async (req, res) => {
 
     await execSQLQuery(`INSERT INTO users(email, password) VALUES('${email}','${password}')`)
 
-    res.status(200).json({ message: 'Dados de login inseridos!' });
+    res.status(201).json({ message: 'Dados de login inseridos!' });
 });
 
 
@@ -135,13 +135,12 @@ app.post('/tasks', async (req, res) => {
         return res.status(400).json({ error: 'ID user não informado!' });
     }
 
-    const created_at = new Date();
-    
+
     await execSQLQuery(`
-        INSERT INTO tasks(user_id, name, priority, status, created_at, completed_at) 
-        VALUES (${user_id},'${name}','${priority}', '${status}', ${created_at}, ${completed_at})`);
+        INSERT INTO tasks(user_id, name, priority, status, completed_at) 
+        VALUES (${user_id},'${name}','${priority}', '${status}', ${completed_at})`);
         
-    res.status(200).json({ message: 'Task incluida com sucesso' });
+    res.status(201).json({ message: 'Task incluida com sucesso'});
 });
 
 //Alterar dados da task
@@ -151,7 +150,7 @@ app.put('/tasks/:id', async (req, res) => {
     if (!taskId) {
         return res.status(400).json({ error: 'ID da tarefa não informado!' })
     }
-    const { name, priority, status, created_at, completed_at } = req.body;
+    const { name, priority, status, completed_at } = req.body;
 
     const taskExist = await execSQLQuery(`SELECT * FROM tasks WHERE id=${taskId}`);
  
@@ -160,7 +159,7 @@ app.put('/tasks/:id', async (req, res) => {
     }
     await execSQLQuery(`
         UPDATE tasks
-        SET name='${name}', priority='${priority}', status='${status}', created_at=${created_at}, completed_at=${completed_at} 
+        SET name='${name}', priority='${priority}', status='${status}', completed_at=${completed_at} 
         WHERE id=${taskId}`);
 
     return res.status(200).json({ message: 'Dados atualizados!' });
