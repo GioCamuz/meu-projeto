@@ -73,11 +73,11 @@ app.post('/login', async (req, res) => {
 
     if (!userExist.length) {
 
-        return res.status(400).json({ error: 'Login ou senha inválidos!' });
+        return res.status(400).json({ message: 'Login ou senha inválidos!' });
 
     }
 
-    return res.status(200).json({ message: 'Login realizado!',user_id: userExist.id });
+    return res.status(200).json({ message: 'Login realizado!',user_id: userExist[0].id });
 });
 
 //Trocar de senha de login
