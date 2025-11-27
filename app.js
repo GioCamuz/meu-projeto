@@ -136,7 +136,7 @@ app.post('/tasks', async (req, res) => {
     }
 
 
-    await execSQLQuery(`
+   const result = await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at)
         OUTPUT INSERTED.Id AS id
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')`);
