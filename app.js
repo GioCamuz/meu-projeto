@@ -142,8 +142,8 @@ app.post('/tasks', async (req, res) => {
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')`);
   
     const insertedId = result.recordset[0].id;
-    console.log("result: "result)
-    console.log("insertedId: " insertedId)
+    console.log(result)
+    console.log(insertedId)
     res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
 
