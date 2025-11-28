@@ -138,7 +138,7 @@ app.post('/tasks', async (req, res) => {
 
    const result = await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at)
-        OUTPUT INSERTED.Id AS id
+        OUTPUT INSERTED.id AS id
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')`);
   
     const insertedId = result.recordset[0].id;
