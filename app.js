@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT ||3000;
 const bcrypt = require("bcrypt");
-const { getPool } = require('./connection');
+const { getPool, sql } = require('./connection');
 
 const cors = require("cors");
 
