@@ -32,18 +32,18 @@ async function execSQLQueryParams(query, params = {}) {
 
     for (const [key, value] of Object.entries(params)) {
         let finalValue = value;
-
-        // Tratar null, undefined, 'null', 'undefined', ''
-        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
-            request.input(key, sql.VarChar, null);
-            continue;
-        }
-
-        // Determina o tipo SQL
         const sqlType = getSQLType(value);
+        
         if (!sqlType) {
             throw new message(`Tipo SQL inválido para o parâmetro "${key}": ${value}`);
         }
+      
+        // Tratar null, undefined, 'null', 'undefined', ''
+        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
+            request.input(key, sqlType, null);
+            continue;
+        }
+
 
         // Converter strings de data
         if (sqlType === sql.DateTime && typeof value === 'string') {
