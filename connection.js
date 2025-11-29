@@ -28,4 +28,4 @@ async function getPool() {
   
 }
 
-module.exports = { getPool }
+module.exports = { getPool, sql }
