@@ -75,8 +75,10 @@ app.post('/register', async (req, res) => {
     if (!email || !password) {
         return res.status(400).json({ error: 'É necessário preencher todos os campos!' });
     }
-    console.log(email);
-    const loginExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @id`);
+    
+    const loginExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email`
+                                               , { email }
+                                               );
     if (loginExist.length) {
         return res.status(400).json({ error: 'E-mail já cadastrado!' });
         console.log("email existe"+ email);
@@ -84,7 +86,9 @@ app.post('/register', async (req, res) => {
     }
         console.log("email nao existe"+email);
 
-    await execSQLQueryParams(`INSERT INTO users(email, password) VALUES(@email, @password)`)
+    await execSQLQueryParams(`INSERT INTO users(email, password) VALUES(@email, @password)`
+                            ,{ email, password }
+                            );
 
     res.status(201).json({ message: 'Dados de login inseridos!' });
 });
@@ -96,7 +100,9 @@ app.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email AND password= @password`);
+    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email AND password= @password`,
+                                               ,{email, password}
+                                              );
 
     if (!userExist.length) {
 
@@ -118,21 +124,27 @@ app.put('/login/:id', async (req, res) => {
         return res.status(400).json({ error: 'ID não informado.' });
 
     }
-    const idExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id`);
+    const idExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id`
+                                            , { id }
+                                            );
 
     if (!idExist.length) {
 
         return res.status(400).json({ error: 'ID não encontrado!' });
 
     }
-    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id AND email= @email`);
+    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id AND email= @email`
+                                              , { id , password }
+                                              );
 
     if (!userExist.length) {
 
         return res.status(400).json({ error: 'Email não encontrado!' })
     }
 
-    await execSQLQueryParams(`UPDATE users SET password= @password WHERE id= @id`);
+    await execSQLQueryParams(`UPDATE users SET password= @password WHERE id= @id`
+                            , { password, id }
+                            );
 
     return res.status(200).json({ message: 'Senha atualizada!' });
 });
@@ -141,7 +153,9 @@ app.put('/login/:id', async (req, res) => {
 //Consultar tasks do Usuario
 app.get('/tasks', async (req, res) => {
     const { user_id } = req.query;
-    const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`);
+    const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
+                                           , { id }
+                                           );
 
     if (!aTasks.length) {
 
@@ -166,8 +180,9 @@ app.post('/tasks', async (req, res) => {
    const result = await execSQLQueryParams(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at)
         VALUES (@user_id, @name, @priority, @status, @completed_at)
-        SELECT SCOPE_IDENTITY() AS id;
-        `);
+        SELECT SCOPE_IDENTITY() AS id;`
+        , { user_id, name, priority, status, completed_at } 
+        );
 
     const insertedId = result[0].id;
   
@@ -183,7 +198,9 @@ app.put('/tasks/:id', async (req, res) => {
     }
     const { name, priority, status, completed_at } = req.body;
 
-    const taskExist = await execSQLQueryParams(`SELECT * FROM tasks WHERE id=@taskId`);
+    const taskExist = await execSQLQueryParams(`SELECT * FROM tasks WHERE id=@taskId`
+                                              , { taskId } 
+                                              );
  
     if (!taskExist.length) {
         return res.status(400).json({ error: 'Task não encontrada!' });
@@ -191,8 +208,9 @@ app.put('/tasks/:id', async (req, res) => {
     await execSQLQueryParams(`
         UPDATE tasks
         SET name= @name, priority= @priority, status= @status, completed_at= @completed_at 
-        WHERE id= @taskId 
-        `);
+        WHERE id= @taskId`
+        , { name, priority, status, completed_at, taskId } 
+        );
 
     return res.status(200).json({ message: 'Dados atualizados!' });
 });
@@ -207,7 +225,9 @@ app.delete('/tasks/:id', async (req, res) => {
         return res.status(400).json({ error: 'ID das tarefas não encontrado' });
     }
 
-    await execSQLQueryParams(`DELETE tasks WHERE id= @taskId`);
+    await execSQLQueryParams(`DELETE tasks WHERE id= @taskId`
+                            , {taskId}
+                            );
 
     return res.status(204).json({ response: 'Task deletada!' });    
 })
