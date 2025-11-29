@@ -77,10 +77,8 @@ function getSQLType(value) {
     if (typeof value === 'boolean') {
         return sql.Bit;
     }
-    if (typeof value === 'string') {
-        return sql.VarChar;
-    }
-    return null; // se não se encaixar em nenhum tipo
+
+    return sql.VarChar;
 }
 
 
