@@ -142,7 +142,7 @@ app.post('/tasks', async (req, res) => {
         SELECT SCOPE_IDENTITY() AS id;
         `);
 
-    const insertedId = result.[0].id;
+    const insertedId = result[0].id;
   
     res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
