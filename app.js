@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 
 async function execSQLQueryParams(query, params={}) {
     const pool = await getPool();
-    const { request } = pool.request();
+    const request = pool.request();
 
     for(const [key, value] of Object.entries(params)) {
       if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === ''){
