@@ -184,7 +184,7 @@ app.get('/tasks', async (req, res) => {
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
                                            , { user_id }
                                            ) || [];
-
+  console.log(aTasks);
     if (!aTasks.length) {
 
         return res.status(400).json({ error: 'Usuário não possuí tarefas!' });
