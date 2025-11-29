@@ -33,14 +33,33 @@ async function execSQLQueryParams(query, params={}) {
     for(const [key, value] of Object.entries(params)) {
       if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === ''){
         request.input(key, sql.varChar, null)
-      }else{
-      const sqlType = getSQLType(value);
-      request.input(key, sqlType, value);
-      }  
+        continue;
+      }
+        
+    const sqlType = getSQLType(value);
+
+    
+    let finalValue = value;
+      if (sqlType === sql.DateTime && typeof value === 'string') {
+        finalValue = new Date(value);
+      }
+    
+
+    request.input(key, sqlType, finalValue);
     }
+      
     const result = await request.query(query);
-    return result.recordset;
+
+// Retorna múltiplos recordsets (INSERT + SCOPE_IDENTITY)
+    if (result.recordsets && result.recordsets.length > 1) {
+        return result.recordsets.flat();
+    }
+
+    // Retorna apenas o primeiro
+    return result.recordset || [];
 }
+
+
 // Determina o tipo do dado inserido no SQL
   
 function getSQLType(value){
