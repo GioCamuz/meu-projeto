@@ -179,8 +179,8 @@ app.put('/login/:id', async (req, res) => {
 
 //Consultar tasks por ID
 
-app.get('/getTask/:id' , async (req, res) => {
-  const task_id = Number(req.params.id);
+app.get('/getTask' , async (req, res) => {
+  const task_id = Number(req.query.id);
   const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @task_id'
                                          , {task_id}
                                          ) || [];
@@ -196,8 +196,8 @@ app.get('/getTask/:id' , async (req, res) => {
   
 
 //Consultar tasks do Usuario
-app.get('/tasks/:user_id', async (req, res) => {
-    const user_id = Number(req.params.user_id);
+app.get('/tasks', async (req, res) => {
+    const user_id = Number(req.query.user_id);
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
                                            , { user_id }
                                            ) || [];
