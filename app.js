@@ -18,6 +18,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Função para validar data
+function isValidDateString(value) {
+    const date = new Date(value);
+    return !isNaN(date.getTime());
+}
 
 //Realizar consultas no SQL
 
@@ -45,6 +50,9 @@ function getSQLType(value){
     }
     if (value instanceof Date) {
       return sql.DateTime;
+    }
+    if (typeof value === 'string' && isValidDateString(value)) {
+        return sql.DateTime;
     }
     if (typeof value === 'boolean') {
         return sql.Bit;
