@@ -179,11 +179,11 @@ app.put('/login/:id', async (req, res) => {
 
 //Consultar tasks por ID
 
-app.get('/getTask' , async (req, res) => {
-  const task_id = Number(req.query.id);
+app.get('/getTask/:id' , async (req, res) => {
+  const taskId = Number(req.params.id);
   const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @task_id'
-                                         , {task_id}
-                                         ) || [];
+                                         , {taskId}
+                                         );
 
   if(!getTask.length){
       return res.status(400).json({message: 'Task não localizada'});
