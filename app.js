@@ -141,11 +141,16 @@ app.post('/tasks', async (req, res) => {
         OUTPUT INSERTED.id
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')
         `);
-  
+        console.log(result);
+        console.log('Result tipo:', typeof result);
+        console.log('Result é array?', Array.isArray(result));
+        console.log('Result:', JSON.stringify(result, null, 2));
+        console.log('Result length:', result?.length);
+        console.log('Primeiro item:', result?.[0]);
 
-    const insertedId = result.[0].id;
+    /*const insertedId = result.[0].id;
   
-    res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
+    res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});*/
 });
 
 //Alterar dados da task
