@@ -26,49 +26,50 @@ function isValidDateString(value) {
 
 //Realizar consultas no SQL
 
-async function execSQLQueryParams(query, params={}) {
+async function execSQLQueryParams(query, params = {}) {
     const pool = await getPool();
     const request = pool.request();
 
-    for(const [key, value] of Object.entries(params)) {
-      if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === ''){
-        request.input(key, sql.varChar, null)
-        continue;
-      }
-        
-    const sqlType = getSQLType(value);
+    for (const [key, value] of Object.entries(params)) {
+        let finalValue = value;
 
-    
-    let finalValue = value;
-      if (sqlType === sql.DateTime && typeof value === 'string') {
-        finalValue = new Date(value);
-      }
-    
+        // Tratar null, undefined, 'null', 'undefined', ''
+        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
+            request.input(key, sql.VarChar, null);
+            continue;
+        }
 
-    request.input(key, sqlType, finalValue);
+        // Determina o tipo SQL
+        const sqlType = getSQLType(value);
+        if (!sqlType) {
+            throw new Error(`Tipo SQL inválido para o parâmetro "${key}": ${value}`);
+        }
+
+        // Converter strings de data
+        if (sqlType === sql.DateTime && typeof value === 'string') {
+            finalValue = new Date(value);
+        }
+
+        request.input(key, sqlType, finalValue);
     }
-      
+
     const result = await request.query(query);
 
-// Retorna múltiplos recordsets (INSERT + SCOPE_IDENTITY)
+    // Retorna o último recordset (para INSERT + SCOPE_IDENTITY)
     if (result.recordsets && result.recordsets.length > 1) {
-        return result.recordsets.flat();
+        return result.recordsets[result.recordsets.length - 1];
     }
 
-    // Retorna apenas o primeiro
     return result.recordset || [];
 }
 
-
-// Determina o tipo do dado inserido no SQL
-  
-function getSQLType(value){
+// Determina tipo SQL
+function getSQLType(value) {
     if (typeof value === 'number') {
-          return Number.isInteger(value) ? sql.Int : sql.Float;
-    
+        return Number.isInteger(value) ? sql.Int : sql.Float;
     }
     if (value instanceof Date) {
-      return sql.DateTime;
+        return sql.DateTime;
     }
     if (typeof value === 'string' && isValidDateString(value)) {
         return sql.DateTime;
@@ -76,10 +77,12 @@ function getSQLType(value){
     if (typeof value === 'boolean') {
         return sql.Bit;
     }
-      return sql.VarChar;
-      
-    
+    if (typeof value === 'string') {
+        return sql.VarChar;
+    }
+    return null; // se não se encaixar em nenhum tipo
 }
+
 
 
 //Consultar todos os logins
