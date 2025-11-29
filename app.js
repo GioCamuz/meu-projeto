@@ -139,13 +139,13 @@ app.post('/tasks', async (req, res) => {
    const result = await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at)
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')
-        SET OUTPUT id = SCOPE_IDENTITY()
+        OUTPUT INSERTED.id
         `);
   
 
-    
+    const insertedId = result.recordset[0].id;
   
-    res.status(201).json({ id: id, message: 'Task incluida com sucesso'});
+    res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
 
 //Alterar dados da task
