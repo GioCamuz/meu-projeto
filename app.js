@@ -84,7 +84,7 @@ app.post('/register', async (req, res) => {
         console.log("email existe"+ email);
         
     }
-        console.log("email nao existe"+email);
+        
 
     await execSQLQueryParams(`INSERT INTO users(email, password) VALUES(@email, @password)`
                             ,{ email, password }
@@ -100,8 +100,8 @@ app.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email AND password= @password`,
-                                               ,{email, password}
+    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email AND password= @password`
+                                               , {email, password}
                                               );
 
     if (!userExist.length) {
@@ -134,7 +134,7 @@ app.put('/login/:id', async (req, res) => {
 
     }
     const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id AND email= @email`
-                                              , { id , password }
+                                              , { id , email }
                                               );
 
     if (!userExist.length) {
@@ -154,7 +154,7 @@ app.put('/login/:id', async (req, res) => {
 app.get('/tasks', async (req, res) => {
     const { user_id } = req.query;
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
-                                           , { id }
+                                           , { user_id }
                                            );
 
     if (!aTasks.length) {
@@ -225,7 +225,7 @@ app.delete('/tasks/:id', async (req, res) => {
         return res.status(400).json({ error: 'ID das tarefas não encontrado' });
     }
 
-    await execSQLQueryParams(`DELETE tasks WHERE id= @taskId`
+    await execSQLQueryParams(`DELETE FROM tasks WHERE id= @taskId`
                             , {taskId}
                             );
 
