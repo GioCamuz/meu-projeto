@@ -177,14 +177,30 @@ app.put('/login/:id', async (req, res) => {
     return res.status(200).json({ message: 'Senha atualizada!' });
 });
 
+//Consultar tasks por ID
+
+app.get('/getTask/:task_id' , async (req, res) => {
+  const task_id = Number(req.query.task_id);
+  const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @task_id'
+                                         , {task_id}
+                                         ) || [];
+
+  if(!getTask.length){
+      return res.status(400).json({message: 'Task não localizada'});
+    
+  }
+
+  return res.status(200).json(getTask);
+  
+}
+  
 
 //Consultar tasks do Usuario
-app.get('/tasks', async (req, res) => {
+app.get('/tasks/:user_id', async (req, res) => {
     const user_id = Number(req.query.user_id);
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
                                            , { user_id }
                                            ) || [];
-  console.log(aTasks);
     if (!aTasks.length) {
 
         return res.status(400).json({ message: 'Usuário não possuí tarefas!' });
