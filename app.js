@@ -144,7 +144,7 @@ app.post('/login', async (req, res) => {
 //Trocar de senha de login
 
 app.put('/login/:id', async (req, res) => {
-    const id = req.params.id;
+    const id = Number(req.params.id);
     const { email, password } = req.body;
 
     if (!id) {
@@ -180,7 +180,7 @@ app.put('/login/:id', async (req, res) => {
 
 //Consultar tasks do Usuario
 app.get('/tasks', async (req, res) => {
-    const { user_id } = req.query;
+    const { user_id } = Number(req.query.user_id);
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
                                            , { user_id }
                                            );
@@ -220,7 +220,7 @@ app.post('/tasks', async (req, res) => {
 //Alterar dados da task
 
 app.put('/tasks/:id', async (req, res) => {
-    const taskId = req.params.id;
+    const taskId = Number(req.params.id);
     if (!taskId) {
         return res.status(400).json({ error: 'ID da tarefa não informado!' })
     }
