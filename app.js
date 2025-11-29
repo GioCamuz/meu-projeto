@@ -179,19 +179,49 @@ app.put('/login/:id', async (req, res) => {
 
 //Consultar tasks por ID
 
-app.get('/getTask/:id' , async (req, res) => {
-  const taskId = Number(req.params.id);
-  const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @taskId'
-                                         , {taskId}
-                                         )|| [];
-
-  if(!getTask.length){
-      return res.status(400).json({message: 'Task não localizada'});
+app.get('/getTask/:id', async (req, res) => {
+  try {
+    // PROTEÇÃO 1: Validar entrada
+    const taskId = Number(req.params.id);
     
+    if (isNaN(taskId) || taskId <= 0) {
+      return res.status(400).json({ 
+        message: 'ID inválido',
+        error: 'O ID deve ser um número positivo'
+      });
+    }
+    
+    // PROTEÇÃO 2: Executar query com tratamento
+    const getTask = await execSQLQueryParams(
+      'SELECT * FROM tasks WHERE id = @taskId',
+      { taskId }
+    );
+    
+    // PROTEÇÃO 3: Validar retorno
+    if (!getTask || !Array.isArray(getTask) || getTask.length === 0) {
+      return res.status(404).json({ 
+        message: 'Task não localizada',
+        taskId: taskId
+      });
+    }
+    
+    // PROTEÇÃO 4: Retornar só o necessário
+    return res.status(200).json(getTask[0]);
+    
+  } catch (error) {
+    // PROTEÇÃO 5: Capturar QUALQUER erro
+    console.error('❌ Erro ao buscar task:', {
+      taskId: req.params.id,
+      error: error.message,
+      stack: error.stack
+    });
+    
+    // Não expor detalhes internos para o cliente
+    return res.status(500).json({ 
+      message: 'Erro ao buscar task',
+      error: 'Erro interno do servidor'
+    });
   }
-
-  return res.status(200).json(getTask);
-  
 });
   
 
