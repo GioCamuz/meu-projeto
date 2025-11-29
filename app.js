@@ -141,7 +141,7 @@ app.post('/tasks', async (req, res) => {
         VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')`);
   
 
-    const insertedId = result.id;
+    const insertedId = SELECT SCOPE_IDENTITY();
   
     res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
