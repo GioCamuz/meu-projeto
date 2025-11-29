@@ -180,7 +180,7 @@ app.put('/login/:id', async (req, res) => {
 
 //Consultar tasks do Usuario
 app.get('/tasks', async (req, res) => {
-    const { user_id } = Number(req.query.user_id);
+    const user_id = Number(req.query.user_id);
     const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
                                            , { user_id }
                                            ) || [];
