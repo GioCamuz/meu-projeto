@@ -26,8 +26,12 @@ async function execSQLQuery(query, params={}) {
     const { request } = pool.request();
 
     for(const [key, value] of Object.entries(params)) {
+      if (value === null || value === undefined || value === 'null' || value === 'undefined' || value === ''){
+        request.input(key, sql.varChar, null)
+      }else{
       const sqlType = getSQLType(value);
       request.input(key, sqlType, value);
+      }  
     }
     const result = await request.query(query);
     return result.recordset;
