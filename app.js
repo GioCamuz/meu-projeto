@@ -248,16 +248,15 @@ app.put('/tasks/:id', async (req, res) => {
 
 app.delete('/tasks/:id', async (req, res) => {
     const taskId = req.params.id;
-
-    if (!taskId) {
+const taskDelete = await execSQLQueryParams(`DELETE FROM tasks WHERE id= @taskId`
+                            , {taskId}
+                            );
+    if (!taskDelete) {
         return res.status(400).json({ message: 'ID das tarefas não encontrado' });
     }
 
-    await execSQLQueryParams(`DELETE FROM tasks WHERE id= @taskId`
-                            , {taskId}
-                            );
 
-    return res.status(204).json({message: 'Task deletada!' });    
+    return res.status(204).json({message: 'Task deletada com sucesso!' });    
 })
 
 
