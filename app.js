@@ -181,9 +181,9 @@ app.put('/login/:id', async (req, res) => {
 
 app.get('/getTask/:id' , async (req, res) => {
   const taskId = Number(req.params.id);
-  const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @task_id'
+  const getTask = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @taskId'
                                          , {taskId}
-                                         );
+                                         )|| [];
 
   if(!getTask.length){
       return res.status(400).json({message: 'Task não localizada'});
@@ -192,7 +192,7 @@ app.get('/getTask/:id' , async (req, res) => {
 
   return res.status(200).json(getTask);
   
-}
+});
   
 
 //Consultar tasks do Usuario
