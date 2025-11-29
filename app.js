@@ -138,8 +138,8 @@ app.post('/tasks', async (req, res) => {
 
    const result = await execSQLQuery(`
         INSERT INTO tasks(user_id, name, priority, status, completed_at)
-        VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')
         OUTPUT INSERTED.id
+        VALUES (${user_id},'${name}','${priority}', '${status}', '${completed_at}')
         `);
   
 
