@@ -143,10 +143,7 @@ app.post('/tasks', async (req, res) => {
         `);
         console.log(result);
         console.log('Result tipo:', typeof result);
-        console.log('Result é array?', Array.isArray(result));
-        console.log('Result:', JSON.stringify(result, null, 2));
-        console.log('Result length:', result?.length);
-        console.log('Primeiro item:', result?.[0]);
+
 
     /*const insertedId = result.[0].id;
   
