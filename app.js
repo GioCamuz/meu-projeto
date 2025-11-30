@@ -104,7 +104,7 @@ app.post('/register', async (req, res) => {
         return res.status(400).json({ message: 'É necessário preencher todos os campos!' });
     }
     
-    const loginExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email`
+    const loginExist = await execSQLQueryParams('SELECT * FROM users WHERE email= @email'
                                                , { email }
                                                );
     if (loginExist.length) {
@@ -114,7 +114,7 @@ app.post('/register', async (req, res) => {
     }
         
 
-    await execSQLQueryParams(`INSERT INTO users(email, password) VALUES(@email, @password)`
+    await execSQLQueryParams('INSERT INTO users(email, password) VALUES(@email, @password)'
                             ,{ email, password }
                             );
 
@@ -128,7 +128,7 @@ app.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE email= @email AND password= @password`
+    const userExist = await execSQLQueryParams('SELECT * FROM users WHERE email= @email AND password= @password'
                                                , {email, password}
                                               );
 
@@ -152,7 +152,7 @@ app.put('/login/:id', async (req, res) => {
         return res.status(400).json({ message: 'ID não informado.' });
 
     }
-    const idExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id`
+    const idExist = await execSQLQueryParams('SELECT * FROM users WHERE id= @id'
                                             , { id }
                                             );
 
@@ -161,7 +161,7 @@ app.put('/login/:id', async (req, res) => {
         return res.status(400).json({ message: 'ID não encontrado!' });
 
     }
-    const userExist = await execSQLQueryParams(`SELECT * FROM users WHERE id= @id AND email= @email`
+    const userExist = await execSQLQueryParams('SELECT * FROM users WHERE id= @id AND email= @email'
                                               , { id , email }
                                               );
 
@@ -228,7 +228,7 @@ app.get('/getTask/:id', async (req, res) => {
 //Consultar tasks do Usuario
 app.get('/tasks', async (req, res) => {
     const user_id = Number(req.query.user_id);
-    const aTasks = await execSQLQueryParams(`SELECT * FROM tasks WHERE user_id= @user_id`
+    const aTasks = await execSQLQueryParams('SELECT * FROM tasks WHERE user_id= @user_id'
                                            , { user_id }
                                            ) || [];
     if (!aTasks.length) {
@@ -272,7 +272,7 @@ app.put('/tasks/:id', async (req, res) => {
     }
     const { name, priority, status, completed_at } = req.body;
 
-    const taskExist = await execSQLQueryParams(`SELECT * FROM tasks WHERE id=@taskId`
+    const taskExist = await execSQLQueryParams('SELECT * FROM tasks WHERE id=@taskId'
                                               , { taskId } 
                                               );
  
@@ -294,11 +294,12 @@ app.put('/tasks/:id', async (req, res) => {
 
 app.delete('/tasks/:id', async (req, res) => {
     const taskId = req.params.id;
-const taskDelete = await execSQLQueryParams(`DELETE FROM tasks WHERE id= @taskId`
+    const taskDelete = await execSQLQueryParams('DELETE FROM tasks WHERE id= @taskId'
                             , {taskId}
                             );
+  
     if (!taskDelete.length) {
-        return res.status(400).json({ message: 'ID das tarefas não encontrado' });
+        return res.status(400).json({ message: 'ID das tarefas não encontrado'});
     }
 
 
