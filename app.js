@@ -293,7 +293,7 @@ app.put('/tasks/:id', async (req, res) => {
 //Deletar Tasks
 
 app.delete('/tasks/:id', async (req, res) => {
-    const taskId = Number(req.params.id);
+    const taskId = parseInt(req.params.id);
     const taskDelete = await execSQLQueryParams('DELETE FROM tasks WHERE id= @taskId'
                             , {taskId}
                             );
