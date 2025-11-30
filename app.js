@@ -54,13 +54,12 @@ async function execSQLQueryParams(query, params = {}) {
     }
 
     const result = await request.query(query);
-
-    // Retorna o último recordset (para INSERT + SCOPE_IDENTITY)
+  
     if (result.recordsets && result.recordsets.length > 1) {
-        return result.recordsets[result.recordsets.length - 1];
+        return result;
     }
 
-    return result.recordset || [];
+    return result; 
 }
 
 // Determina tipo SQL
