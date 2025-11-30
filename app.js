@@ -49,12 +49,17 @@ async function execSQLQueryParams(query, params = {}) {
 
     const result = await request.query(query);
 
-    if (result.recordsets && result.recordsets.length > 1) {
-        return result.recordsets[result.recordsets.length - 1];
-    }
-    return result.recordset || [];
+if (result.recordsets && result.recordsets.length > 1) {
+    return {
+        rowsAffected: result.rowsAffected || [],
+        recordset: result.recordsets[result.recordsets.length - 1]
+    };
 }
-
+return {
+    rowsAffected: result.rowsAffected || [],
+    recordset: result.recordset || []
+};
+}
 function getSQLType(value) {
     if (typeof value === 'string' && !isNaN(value) && value.trim() !== '') {
         const numValue = Number(value);
