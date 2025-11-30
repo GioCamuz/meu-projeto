@@ -57,7 +57,7 @@ if (result.recordsets && result.recordsets.length > 1) {
 }
 return {
     rowsAffected: result.rowsAffected || [],
-    recordset: result.recordset || []
+    recordset: result.recordset || [] || []
 };
 }
 function getSQLType(value) {
