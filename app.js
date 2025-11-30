@@ -92,7 +92,7 @@ function getSQLType(value) {
 app.get('/users', async (req, res) => {
     const aUsers = await execSQLQueryParams('SELECT * FROM users');
 
-    if (!aUsers.length) {
+    if (!aUsers.recordset?.length) {
         res.status(400).json({ message: 'Não existe usuários' });
     }
 
@@ -111,7 +111,7 @@ app.post('/register', async (req, res) => {
     const loginExist = await execSQLQueryParams('SELECT * FROM users WHERE email= @email'
                                                , { email }
                                                );
-    if (loginExist.length) {
+    if (loginExist.recordset?.length > 0) {
         return res.status(400).json({ message: 'E-mail já cadastrado!' });
         console.log("email existe"+ email);
         
@@ -136,7 +136,7 @@ app.post('/login', async (req, res) => {
                                                , {email, password}
                                               );
 
-    if (!userExist.length) {
+    if (!userExist.recordset?.length) {
 
         return res.status(400).json({ message: 'Login ou senha inválidos!' });
 
@@ -160,7 +160,7 @@ app.put('/login/:id', async (req, res) => {
                                             , { id }
                                             );
 
-    if (!idExist.length) {
+    if (!idExist.recordset?.length) {
 
         return res.status(400).json({ message: 'ID não encontrado!' });
 
@@ -169,7 +169,7 @@ app.put('/login/:id', async (req, res) => {
                                               , { id , email }
                                               );
 
-    if (!userExist.length) {
+    if (!userExist.recordset?.length) {
 
         return res.status(400).json({ message: 'Email não encontrado!' })
     }
@@ -202,7 +202,7 @@ app.get('/getTask/:id', async (req, res) => {
     );
     
     // PROTEÇÃO 3: Validar retorno
-    if (!getTask || !Array.isArray(getTask) || getTask.length === 0) {
+    if (!getTask || !Array.isArray(getTask) || getTask.recordset?.length === 0) {
       return res.status(404).json({ 
         message: 'Task não localizada',
         taskId: taskId
@@ -235,7 +235,7 @@ app.get('/tasks', async (req, res) => {
     const aTasks = await execSQLQueryParams('SELECT * FROM tasks WHERE user_id= @user_id'
                                            , { user_id }
                                            ) || [];
-    if (!aTasks.length) {
+    if (!aTasks.recordset?.length) {
 
         return res.status(400).json({ message: 'Usuário não possuí tarefas!' });
 
@@ -262,7 +262,7 @@ app.post('/tasks', async (req, res) => {
         , { user_id, name, priority, status, completed_at } 
         );
 
-    const insertedId = result[0].id;
+    const insertedId = result.recordset?.[0]?.id;
   
     res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
@@ -280,7 +280,7 @@ app.put('/tasks/:id', async (req, res) => {
                                               , { taskId } 
                                               );
  
-    if (!taskExist.length) {
+    if (!taskExist.recordset?.length) {
         return res.status(400).json({ message: 'Task não encontrada!' });
     }
     await execSQLQueryParams(`
