@@ -299,7 +299,6 @@ app.delete('/tasks/:id', async (req, res) => {
                             );
    
     if(!taskDelete.length){
-      console.log('True if taskDelete')
       return res.status(400).json({ message: 'ID das tarefas não encontrado'});
       
     }
@@ -310,8 +309,7 @@ app.delete('/tasks/:id', async (req, res) => {
   console.log(verifyDelete);
   
     if (!verifyDelete.length === 0) {
-        console.log('true verifyDelete!')
-        return res.status(400).json({ message: 'ID das tarefas não encontrado'});
+        return res.status(400).json({ message: 'Tarefa não excluida não encontrado'});
     }
 
 
