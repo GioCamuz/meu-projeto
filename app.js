@@ -301,7 +301,7 @@ app.delete('/tasks/:id', async (req, res) => {
                                                   , {taskId}
                                                   );
   
-    if (!verifyDelete || verifyDelete.length==0) {
+    if (verifyDelete.length > 0) {
         return res.status(400).json({ message: 'ID das tarefas não encontrado'});
     }
 
