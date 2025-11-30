@@ -25,7 +25,6 @@ function isValidDateString(value) {
 }
 
 //Realizar consultas no SQL
-
 async function execSQLQueryParams(query, params = {}) {
     const pool = await getPool();
     const request = pool.request();
@@ -33,20 +32,25 @@ async function execSQLQueryParams(query, params = {}) {
     for (const [key, value] of Object.entries(params)) {
         let finalValue = value;
         const sqlType = getSQLType(value);
-        
+
         if (!sqlType) {
-            throw new message(`Tipo SQL inválido para o parâmetro "${key}": ${value}`);
+            throw new Error(`Tipo SQL inválido para o parâmetro "${key}": ${value}`);
         }
-      
-        // Tratar null, undefined, 'null', 'undefined', ''
-        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
+
+        // Tratar null/undefined
+        if (
+            value === null ||
+            value === undefined ||
+            value === "" ||
+            value === "null" ||
+            value === "undefined"
+        ) {
             request.input(key, sqlType, null);
             continue;
         }
 
-
-        // Converter strings de data
-        if (sqlType === sql.DateTime && typeof value === 'string') {
+        // Converter para Date
+        if (sqlType === sql.DateTime && typeof value === "string") {
             finalValue = new Date(value);
         }
 
@@ -54,20 +58,22 @@ async function execSQLQueryParams(query, params = {}) {
     }
 
     const result = await request.query(query);
-    
+
+    // INSERT + SCOPE_IDENTITY()
     if (result.recordsets && result.recordsets.length > 1) {
         return {
             rowsAffected: result.rowsAffected,
-            recordset: result.recordsets[result.recordsets.length - 1], // ← ID aqui
+            recordset: result.recordsets[result.recordsets.length - 1],
         };
     }
 
-
+    // SELECT / UPDATE / DELETE
     return {
         rowsAffected: result.rowsAffected,
         recordset: result.recordset || [],
     };
 }
+
 // Determina tipo SQL
 function getSQLType(value) {
     if (typeof value === 'number') {
