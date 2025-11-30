@@ -142,7 +142,7 @@ app.post('/login', async (req, res) => {
 
     }
 
-    return res.status(200).json({user_id: userExist[0].id, message: 'Login realizado!'});
+    return res.status(200).json({user_id: userExist.recordset?.[0]?.id, message: 'Login realizado!'});
 });
 
 //Trocar de senha de login
