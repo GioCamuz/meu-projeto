@@ -27,21 +27,21 @@ function isValidDateString(value) {
 //Realizar consultas no SQL
 async function execSQLQueryParams(query, params = {}) { 
 const pool = await getPool(); 
-  
 const request = pool.request(); 
 
 for (const [key, value] of Object.entries(params)) { 
   
   let finalValue = value; 
-  
   const sqlType = getSQLType(value); 
+  
   if (!sqlType) { 
-    throw new message(Tipo SQL inválido para o parâmetro "${key}": ${value}); 
+    throw new Error(Tipo SQL inválido para o parâmetro "${key}": ${value}); 
   } 
   
   // Tratar null, undefined, 'null', 'undefined', '' 
   if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') { 
-    request.input(key, sqlType, null); continue; 
+    request.input(key, sqlType, null); 
+    continue; 
   } 
   // Converter strings de data 
   if (sqlType === sql.DateTime && typeof value === 'string') { 
@@ -51,7 +51,9 @@ for (const [key, value] of Object.entries(params)) {
   
   // Retorna o último recordset (para INSERT + SCOPE_IDENTITY) 
   if (result.recordsets && result.recordsets.length > 1) { 
-    return result.recordsets[result.recordsets.length - 1]; } return result.recordset || []; 
+    return result.recordsets[result.recordsets.length - 1]; 
+  } 
+  return result.recordset || []; 
 }
 
 // Determina tipo SQL
