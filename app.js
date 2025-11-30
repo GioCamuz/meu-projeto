@@ -56,6 +56,8 @@ for (const [key, value] of Object.entries(params)) {
   return result.recordset || []; 
 }
 
+}
+
 // Determina tipo SQL
 function getSQLType(value) {
     if (typeof value === 'number') {
@@ -73,7 +75,6 @@ function getSQLType(value) {
 
     return sql.VarChar;
 }
-
 
 
 //Consultar todos os logins
