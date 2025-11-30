@@ -56,9 +56,15 @@ async function execSQLQueryParams(query, params = {}) {
 }
 
 function getSQLType(value) {
+    if (typeof value === 'string' && !isNaN(value) && value.trim() !== '') {
+        const numValue = Number(value);
+        return Number.isInteger(numValue) ? sql.Int : sql.Float;
+    }
+    
     if (typeof value === 'number') {
         return Number.isInteger(value) ? sql.Int : sql.Float;
     }
+    
     if (value instanceof Date) {
         return sql.DateTime;
     }
@@ -68,8 +74,10 @@ function getSQLType(value) {
     if (typeof value === 'boolean') {
         return sql.Bit;
     }
-    return sql.NVarChar(255);
+  
+    return sql.VarChar(255);
 }
+
 
 
 
