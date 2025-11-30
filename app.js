@@ -297,7 +297,7 @@ app.delete('/tasks/:id', async (req, res) => {
     const taskDelete = await execSQLQueryParams('DELETE FROM tasks WHERE id= @taskId'
                             , {taskId}
                             );
-
+    console.log(taskDelete);
     if(!taskDelete.length){
       return res.status(400).json({ message: 'ID das tarefas não encontrado'});
     }
@@ -305,6 +305,7 @@ app.delete('/tasks/:id', async (req, res) => {
     const verifyDelete = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @taskId'
                                                   , {taskId}
                                                   );
+  console.log(verifyDelete);
   
     if (!verifyDelete.length === 0) {
         return res.status(400).json({ message: 'ID das tarefas não encontrado'});
