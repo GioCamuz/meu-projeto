@@ -53,15 +53,19 @@ async function execSQLQueryParams(query, params = {}) {
         request.input(key, sqlType, finalValue);
     }
 
-    const result = await request.query(query);
-  
     if (result.recordsets && result.recordsets.length > 1) {
-        return result;
+        return {
+            rowsAffected: result.rowsAffected,
+            recordset: result.recordsets[result.recordsets.length - 1], // ← ID aqui
+        };
     }
 
-    return result; 
-}
 
+    return {
+        rowsAffected: result.rowsAffected,
+        recordset: result.recordset || [],
+    };
+}
 // Determina tipo SQL
 function getSQLType(value) {
     if (typeof value === 'number') {
