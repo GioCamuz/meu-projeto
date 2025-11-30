@@ -53,6 +53,8 @@ async function execSQLQueryParams(query, params = {}) {
         request.input(key, sqlType, finalValue);
     }
 
+    const result = await request.query(query);
+    
     if (result.recordsets && result.recordsets.length > 1) {
         return {
             rowsAffected: result.rowsAffected,
@@ -261,7 +263,7 @@ app.post('/tasks', async (req, res) => {
         , { user_id, name, priority, status, completed_at } 
         );
 
-    const insertedId = result[0].id;
+    const insertedId = result.recordset[0].id;
   
     res.status(201).json({ id: insertedId, message: 'Task incluida com sucesso'});
 });
