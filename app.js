@@ -24,40 +24,38 @@ function isValidDateString(value) {
     return !isNaN(date.getTime());
 }
 
-async function execSQLQueryParams(query, params = {}) {  
-    const pool = await getPool(); 
-    const request = pool.request(); 
+async function execSQLQueryParams(query, params = {}) {
+    const pool = await getPool();
+    const request = pool.request();
 
-    for (const [key, value] of Object.entries(params)) { 
-        let finalValue = value; 
-        const sqlType = getSQLType(value); 
-        
-        if (!sqlType) {  
-            throw new Error(`Tipo SQL inválido para o parâmetro "${key}": ${value}`); 
-        } 
-        
-        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') { 
-            request.input(key, sqlType, null); 
-            continue; 
-        } 
-        
-        if (sqlType === sql.DateTime && typeof value === 'string') { 
-            finalValue = new Date(value); 
-        } 
-        
-        request.input(key, sqlType, finalValue); 
-    }  // }2
-    
-    const result = await request.query(query); 
-    
-    if (result.recordsets && result.recordsets.length > 1) { 
-        return result.recordsets[result.recordsets.length - 1]; 
-    } 
-    
-    return result.recordset || []; 
+    for (const [key, value] of Object.entries(params)) {
+        let finalValue = value;
+        const sqlType = getSQLType(value);
+
+        if (!sqlType) {
+            throw new Error(`Tipo SQL inválido para o parâmetro "${key}": ${value}`);
+        }
+
+        if (value === null || value === undefined || value === '' || value === 'null' || value === 'undefined') {
+            request.input(key, sqlType, null);
+            continue;
+        }
+
+        if (sqlType === sql.DateTime && typeof value === 'string') {
+            finalValue = new Date(value);
+        }
+        request.input(key, sqlType, finalValue);
+    }
+
+    const result = await request.query(query);
+
+    if (result.recordsets && result.recordsets.length > 1) {
+        return result.recordsets[result.recordsets.length - 1];
+    }
+    return result.recordset || [];
 }
 
-function getSQLType(value) { 
+function getSQLType(value) {
     if (typeof value === 'number') {
         return Number.isInteger(value) ? sql.Int : sql.Float;
     }
@@ -71,7 +69,8 @@ function getSQLType(value) {
         return sql.Bit;
     }
     return sql.VarChar;
-} 
+}
+
 
 
 
