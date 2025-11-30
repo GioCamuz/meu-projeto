@@ -298,19 +298,10 @@ app.delete('/tasks/:id', async (req, res) => {
                             , {taskId}
                             );
    
-    if(!taskDelete){
+    if(taskDelete.rowsAffected == [0] ){
       return res.status(400).json({ message: 'ID das tarefas não encontrado'});
       
     }
-  
-    const verifyDelete = await execSQLQueryParams('SELECT * FROM tasks WHERE id = @taskId'
-                                                  , {taskId}
-                                                  );
-  
-    if (!verifyDelete.length === 0) {
-        return res.status(400).json({ message: 'Tarefa não excluida não encontrado'});
-    }
-
 
     return res.status(204).json({message: 'Task deletada com sucesso!' });    
 });
